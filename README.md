@@ -26,7 +26,7 @@ A simple web-based movie application built with Django. This app allows users to
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/syawqy/movie_app_jango.git
+   git clone https://github.com/syawqy/movie_app_django.git
    cd movie_app
    ```
 
