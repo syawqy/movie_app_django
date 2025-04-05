@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<input type="text" id="searchBar" placeholder="Search movies..." class="search-bar">
+
+<div class="movie-grid" id="movieResults">
+    {% for movie in movies %}
+    <div class="movie-card">
+        <a href="{% url 'movie_detail' movie.pk %}">
+            <img src="{{ movie.img_path }}" alt="{{ movie.name }}">
+            <div class="movie-info">
+                <h3>{{ movie.name }}</h3>
+                <p>{{ movie.duration }} min</p>
+                <p>Rating: {{ movie.user_rating }}</p>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+const searchBar = document.getElementById('searchBar');
+const movieResults = document.getElementById('movieResults');
+
+function debounce(func, timeout = 300) {
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => { func.apply(this, args); }, timeout);
+    };
+}
+
+async function searchMovies(query) {
+    try {
+        const response = await fetch(`/search/?q=${encodeURIComponent(query)}`);
+        const movies = await response.json();
+        
+        movieResults.innerHTML = movies.results.map(movie => `
+            <div class="movie-card">
+                <a href="/movie/${movie.id}/">
+                    <img src="${movie.img_path}" alt="${movie.name}">
+                    <div class="movie-info">
+                        <h3>${movie.name}</h3>
+                        <p>${movie.duration} min</p>
+                        <p>Rating: ${movie.rating}</p>
+                    </div>
+                </a>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Search failed:', error);
+    }
+}
+
+searchBar.addEventListener('input', debounce((e) => {
+    const query = e.target.value.trim();
+    if (query.length > 2) {
+        searchMovies(query);
+    } else if (query.length === 0) {
+        window.location.reload(); // Reset to initial list
+    }
+}));
+</script>
+{% endblock %}

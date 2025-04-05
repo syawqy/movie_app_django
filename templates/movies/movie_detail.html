@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="movie-detail">
+    <img src="{{ movie.image_path }}" alt="{{ movie.name }}" class="detail-poster">
+    <div class="detail-info">
+        <h1>{{ movie.name }}</h1>
+        <p><strong>Language:</strong> {{ movie.language }}</p>
+        <p><strong>MPAA Rating:</strong> {{ movie.mpaa_rating.type }} - {{ movie.mpaa_rating.label }}</p>
+        <p><strong>Rating:</strong> {{ movie.user_rating }}/5</p>
+        <p><strong>Duration:</strong> {{ movie.duration }} minutes</p>
+        <div class="genre-list">
+            {% for genre in movie.genre %}
+            <span class="genre-tag">{{ genre }}</span>
+            {% endfor %}
+        </div>
+        <p><strong>Synopsis:</strong> </p>
+        <p class="description">{{ movie.description }}</p>
+    </div>
+</div>
+{% endblock %}
